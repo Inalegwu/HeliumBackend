@@ -10,10 +10,14 @@ export class FileService {
 
   async createFile(file: CreateFileDTO): Promise<Response> {
     try {
+      const document = await this.Prisma.document.findUnique({
+        where: { id: file.document_id },
+      });
       await this.Prisma.file.create({
         data: {
-          file_content: file.content,
+          file_content: '',
           file_name: file.title,
+          document_id: document.id,
         },
       });
       return { message: 'Successful', status: Status.SUCCESSFUL };
